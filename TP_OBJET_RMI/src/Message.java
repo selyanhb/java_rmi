@@ -1,12 +1,9 @@
-
 public class Message {
 	protected Client sender;
 	protected int id;
 	protected String msg;
 
-
-
-public Client getSender() {
+	public Client getSender() {
 		return sender;
 	}
 
@@ -14,30 +11,27 @@ public Client getSender() {
 		this.sender = sender;
 	}
 
-public Message(Client sender, int id, String msg) {
-	super();
-	this.sender = sender;
-	this.id = id;
-	this.msg = msg;
-}
+	public Message(Client sender, int id, String msg) {
+		super();
+		this.sender = sender;
+		this.id = id;
+		this.msg = msg;
+	}
 
-public int getId() {
-	return id;
-}
+	public int getId() {
+		return id;
+	}
 
-public void setId(int id) {
-	this.id = id;
-}
+	public void setId(int id) {
+		this.id = id;
+	}
 
-public String getMsg() {
-	return msg;
-}
+	public String getMsg() {
+		return msg;
+	}
 
-public void setMsg(String msg) {
-	this.msg = msg;
-}
-	
-
-
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 
 }
