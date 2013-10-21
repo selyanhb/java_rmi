@@ -1,12 +1,13 @@
 import java.io.Console;
 import java.net.InetAddress;
 import java.rmi.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client {
 	private static String url_serveur_local;
 
-	private static String id = "";
+	private static String pseudo = "";
 
 	public static void main(String args[]) {
 
@@ -68,11 +69,12 @@ public class Client {
 				.println("Appuyer sur Entrée pour taper vos commandes ('help' pour l'aide et 'quit' pour arrêter");
 		String input = null;
 		while (true) {
+			try{
 			keyboard.nextLine();
 			// TODO Gérer le thread d'affichage des autres messages
 
 			// On empeche e thread d'afficher des messages
-			System.out.print("user " + id + " input=>");
+			System.out.print("user " + pseudo + " input=>");
 			input = keyboard.nextLine();
 
 			// On analyse la commande
@@ -81,8 +83,13 @@ public class Client {
 			}
 
 			else if (input.equals("who")) {
-				// TODO Afficher la liste des id des participants
+				ArrayList<String> list=comm.who();
+				for (int i = 0; i < list.size(); i++) {
+					System.out.println("client n° " + (i + 1) + " pseudo: "
+							+ list.get(i));
+				}
 				System.out.println("Affichage des participants");
+				System.out.println("Il y a " + list.size() + " connectés");
 			}
 
 			else if (input.equals("help")) {
@@ -90,11 +97,17 @@ public class Client {
 				// TODO Afficher l'aide
 
 			} else if (input.equals("bye")) {
-				if (!id.equals("")) {
-					// TODO Retirer l'id dans la liste du serveur
-					id = "";
-					System.out
-							.println("Log out effectué, tapez entrée puis 'quit' pour fermer le prog");
+				if (!pseudo.equals("")) {
+					if(comm.bye(pseudo)){
+						pseudo="";
+						System.out.println("Log out effectué, tapez entrée puis 'quit' pour fermer le prog");
+					}else{
+						System.out.println("Problème d'exécution sur le serveur");
+					}
+					
+					
+					
+					
 				} else {
 					System.out.println("Pas identifié sur le serveur");
 				}
@@ -103,13 +116,22 @@ public class Client {
 				String command = (input.split(" "))[0];
 
 				if (command.equals("id")) {
-					// TODO Faire la connexion
-					System.out.println("Connecté sous le pseudo " + id);
+					if(pseudo.equals("")){
+						if(comm.connect((input.split(" "))[1])){
+							pseudo=input.split(" ")[1];
+						}
+						System.out.println("Vous etes identifié sous le pseudo "+pseudo);
+					}else{
+						System.out.println("Pseudo pas disponible, veuillez en choisir un autre");
+					}
+					
 
 				} else if (command.equals("send")) {
-					if (!id.equals("")) {
-						// TODO Envoyer un message
-						System.out.println("Message envoyé");
+					if (!pseudo.equals("")) {
+						String msg=input.replaceFirst("send ","");
+						comm.send(pseudo,input);
+						System.out.println("Message Envoyé");
+						//System.out.println(message.getId()+ " "+ message.getSender()+ " says: "+message.getMsg());
 					} else {
 						System.out
 								.println("Veuillez d'abord vous identifier avec 'id'");
@@ -120,6 +142,9 @@ public class Client {
 							.println("Commande inconnue, taper entrée puis 'help' pour le listing");
 				}
 
+			}
+			}catch(Exception e){
+				System.out.println("Erreur lors de l'envoi de la commande");
 			}
 		}
 	}

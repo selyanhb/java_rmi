@@ -1,20 +1,19 @@
 public class Message {
-	protected Client sender;
+	protected String sender;
 	protected int id;
 	protected String msg;
 
-	public Client getSender() {
+	public String getSender() {
 		return sender;
 	}
 
-	public void setSender(Client sender) {
+	public void setSender(String sender) {
 		this.sender = sender;
 	}
 
-	public Message(Client sender, int id, String msg) {
+	public Message(String sender, String msg) {
 		super();
 		this.sender = sender;
-		this.id = id;
 		this.msg = msg;
 	}
 

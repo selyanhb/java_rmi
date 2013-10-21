@@ -8,30 +8,50 @@ import java.util.List;
 
 public class Serveur extends UnicastRemoteObject implements Communication {
 
-	protected ArrayList<Integer> id_clients;
+	protected ArrayList<String> id_clients;
 	protected ArrayList<Message> messages;
 
 	public Serveur() throws java.rmi.RemoteException {
-		id_clients = new ArrayList<Integer>();
+		id_clients = new ArrayList<String>();
 		messages = new ArrayList<Message>();
 	}
 
-	public void connect(Integer id) throws java.rmi.RemoteException {
-		System.out.println("Vous etes connecté au serveur!");
-		id_clients.add(id);
-	}
-
-	public void who() throws java.rmi.RemoteException {
-		for (int i = 0; i < id_clients.size(); i++) {
-			System.out.println("client n° " + (i + 1) + " id: "
-					+ id_clients.get(i));
+	public boolean connect(String pseudo) throws java.rmi.RemoteException {
+		if(id_clients.contains(pseudo)){
+			
+			return false;
+		}else {
+			id_clients.add(pseudo);
+			
+			return true;
 		}
-		System.out.println("Il y a " + id_clients.size() + " connectés");
+		
+		
 	}
 
-	public void bye(Integer id) throws java.rmi.RemoteException {
-		System.out.println("Vous êtes bien déconnecté du serveur!");
-		id_clients.remove(id);
+	public ArrayList<String> who() throws java.rmi.RemoteException {
+		return id_clients;
+		
+	}
+
+	public boolean bye(String pseudo) throws java.rmi.RemoteException {
+		if(id_clients.contains(pseudo)){
+			id_clients.remove(pseudo);
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	public void send(String pseudo,String input)throws java.rmi.RemoteException{
+		
+		Message message=new Message(pseudo,input);
+		messages.add(message);
+		message.setId(messages.size());
+		System.out.println("Message recu");
+		
+		
 	}
 
 	public static void main(String args[]) {
